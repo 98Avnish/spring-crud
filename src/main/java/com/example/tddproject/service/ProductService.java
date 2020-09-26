@@ -5,6 +5,7 @@ import com.example.tddproject.repo.IProductRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,6 +14,15 @@ public class ProductService implements IProductService {
 
     @Autowired
     private IProductRepo productRepo;
+
+    @PostConstruct
+    void populate() {
+        Product p1 = new Product();
+        p1.setName("P1");
+        p1.setQuantity(10);
+        p1.setVersion(1);
+        productRepo.saveAndFlush(p1);
+    }
 
     @Override
     public Optional<Product> findById(Long id) {
