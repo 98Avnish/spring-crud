@@ -2,8 +2,8 @@ package com.example.tddproject.controller;
 
 import com.example.tddproject.model.Product;
 import com.example.tddproject.service.IProductService;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,7 +17,7 @@ import java.util.Optional;
 @RestController
 public class ProductController {
 
-    private static final Logger LOGGER = LogManager.getLogger(ProductController.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(ProductController.class);
 
     @Autowired
     private IProductService productService;
@@ -44,7 +44,7 @@ public class ProductController {
 
     @PostMapping("/product")
     public ResponseEntity<Product> createProduct(@RequestBody Product product) {
-        LOGGER.info("Creating new product :{}", product.toString());
+        LOGGER.info("Creating new product :{}", product);
         Product newProduct = productService.save(product);
         try {
             return ResponseEntity
@@ -60,7 +60,7 @@ public class ProductController {
     public ResponseEntity<?> updateProduct(@RequestBody Product product,
                                            @PathVariable Long id,
                                            @RequestHeader("If-Match") Integer ifMatch) {
-        LOGGER.info("Updating product :{}", product.toString());
+        LOGGER.info("Updating product :{}", product);
         Optional<Product> existingProduct = productService.findById(id);
 
         return existingProduct.map(p -> {
@@ -72,7 +72,7 @@ public class ProductController {
            p.setVersion(product.getVersion());
            p.setQuantity(product.getQuantity());
 
-           LOGGER.info("Updating product :{}", p.toString());
+           LOGGER.info("Updating product :{}", p);
 
            try {
                if (productService.update(p)) {
