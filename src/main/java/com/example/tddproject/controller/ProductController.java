@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -38,7 +39,7 @@ public class ProductController {
     }
 
     @GetMapping("/products")
-    public Iterable<Product> getProducts() {
+    public List<Product> getProducts() {
         return productService.findAll();
     }
 
@@ -90,5 +91,15 @@ public class ProductController {
         }).orElse(ResponseEntity.notFound().build());
     }
 
+    @DeleteMapping("/product/{id}")
+    public ResponseEntity<Boolean> deleteProduct(@PathVariable Long id) {
+        return productService.findById(id).map(product -> {
+            LOGGER.info("Deleting product :{}", product);
+            this.productService.delete(id);
+            return ResponseEntity
+                    .ok()
+                    .body(true);
+        }).orElse(ResponseEntity.notFound().build());
+    }
 
 }
